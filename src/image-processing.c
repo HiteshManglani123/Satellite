@@ -8,14 +8,17 @@
 // there is strict typing for BMP headers, this is to make sure there is no padding
 #pragma pack(1)
 typedef struct {
-    int16_t signiture; // must be 4D42 hex
+    int16_t signature; // must be 4D42 hex
     uint32_t file_size; // unreliable
     uint16_t reserved1;
     uint16_t reserved2;
     uint32_t data_offset;
+
     uint32_t info_header_size; // must be 40?
+
     int32_t width; // could be negative
     int32_t heigth; // could be negative
+
     uint16_t planes; // must be 1
     uint16_t bit_depth; // should be (1, 4, ,8 or 24)
     uint32_t compression_type; // 0=none, 1=RLE-8, 2=RLE-4)
@@ -51,14 +54,14 @@ int main(void)
 
     if (fp_image == NULL) {
         fprintf(stderr, "Unable to find image\n");
-        return 1;
+        return -1;
     }
 
     Bmp_Header *bmp_header = malloc(sizeof(Bmp_Header));
 
     if (bmp_header == NULL) {
         fprintf(stderr, "Could not allocate space for bmp header");
-        return 0;
+        return -1;
     }
 
     // Transfer header of fp_image into bmp_header
@@ -114,13 +117,13 @@ int main(void)
 
     if (fo == NULL) {
         fprintf(stderr, "Unable to open file for writing binary image\n");
-        return 1;
+        return -1;
     }
 
     // write header
     if (fwrite(bmp_header, 1, sizeof(Bmp_Header), fo) != sizeof(Bmp_Header)) {
         fprintf(stderr, "Unable to write header file of %lu bytes\n", sizeof(Bmp_Header));
-        return 1;
+        return -1;
     }
 
     printf("Wrote header: %lu bytes\n", sizeof(Bmp_Header));
