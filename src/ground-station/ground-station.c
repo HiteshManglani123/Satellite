@@ -60,11 +60,11 @@ int main(int argc, char *argv[]) {
 	}
 
 	// Construct server address (no need to bind)
-	satellite_addr.sun_family = AF_UNIX;
 	memset(&satellite_addr, 0, sizeof(struct sockaddr_un));
+	satellite_addr.sun_family = AF_UNIX;
 	strncpy(satellite_addr.sun_path, SATELLITE_SOCKET_PATH, sizeof(satellite_addr.sun_path) -1 );
 
-	tftp_retrieve_file(sfd, satelite_addr, NULL, 1);
+	tftp_retrieve_file(sfd, satellite_addr, NULL, 1);
 
 	close(sfd);
 	unlink(GROUND_STATION_SOCKET_PATH);

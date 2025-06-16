@@ -38,27 +38,52 @@ int main (int argc, char *argv[]) {
 	    exit_error("unable to open socket datagram");
 	}
 
+	unlink(SATELLITE_SOCKET_PATH);  // Clean up any old socket file
+
 	if (remove(SATELLITE_SOCKET_PATH) == -1 && errno != ENOENT) {
 	    exit_error("unable to remove socket file");
 	}
+
 
 	// Construct and bind satellite address
 	addr.sun_family = AF_UNIX;
 	memset(&addr, 0, sizeof(struct sockaddr_un));
 	strncpy(addr.sun_path, SATELLITE_SOCKET_PATH, sizeof(addr.sun_path) - 1);
 
-
 	// Bind the socket to an established address
 	if (bind(sfd, (struct sockaddr *) &addr, sizeof(struct sockaddr_un)) == -1) {
 		exit_error("unable to bind socket");
 	}
 
-	printf("Socket --> %s\n", SATELLITE_SOCKET_PATH);
+	printf("Sfd: %d - Socket: %s\n", sfd, SATELLITE_SOCKET_PATH);
 
-	char *buf = "101010";
+	FILE *fp_image = fopen("images/some-random-stars.bmp", "r");
 
-    printf("Ready to send file...\n");
-	tftp_send_file(sfd, buf, strlen(buf));
+    if (fp_image == NULL) {
+        fprintf(stderr, "Unable to find image\n");
+        return -1;
+    }
+
+    fseek(fp_image, 0L, SEEK_END);
+    long image_size = ftell(fp_image);
+    rewind(fp_image);
+
+    char *buf = malloc(image_size);
+
+    if (!buf) {
+        fprintf(stderr, "unable to allocate space for buf: %lu\n", image_size);
+        fclose(fp_image);
+        exit(1);
+    }
+
+    fread(buf, 1, image_size, fp_image);
+
+    fclose(fp_image);
+
+    printf("Ready to send file with size: %lu\n", image_size);
+	tftp_send_file(sfd, (uint8_t *)buf, image_size);
+
+	free(buf);
 
 	close(sfd);
 	unlink(SATELLITE_SOCKET_PATH);

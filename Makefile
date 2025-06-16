@@ -1,7 +1,7 @@
 all: satellite ground-station
 
 satellite: src/satellite/satellite.c build/tftp.o
-	gcc src/satellite/satellite.c -o build/satellite
+	gcc src/satellite/satellite.c build/tftp.o -o build/satellite
 
 ground-station: build/ground-station.o build/tftp.o
 	gcc build/ground-station.o build/tftp.o -o build/ground-station
