@@ -81,7 +81,7 @@ int main (int argc, char *argv[]) {
     fclose(fp_image);
 
     printf("Ready to send file with size: %lu\n", image_size);
-	tftp_send_file(sfd, (uint8_t *)buf, image_size);
+	tftp_send_file(sfd, buf, image_size, "[SATELLITE]");
 
 	free(buf);
 

@@ -1,5 +1,4 @@
 #ifndef IMAGE_PROCESSING_H
-
 #define IMAGE_PROCESSING_H
 #include <stdint.h>
 
@@ -24,5 +23,10 @@ typedef struct {
     int32_t number_of_colors; // could be zero
     int32_t number_of_important_colors; // could be zero
 } Bmp_Header;
+
+typedef struct {
+    double z1;
+    double z2;
+} Box_Muller_Output;
 
 #endif

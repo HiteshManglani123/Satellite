@@ -64,7 +64,7 @@ int main(int argc, char *argv[]) {
 	satellite_addr.sun_family = AF_UNIX;
 	strncpy(satellite_addr.sun_path, SATELLITE_SOCKET_PATH, sizeof(satellite_addr.sun_path) -1 );
 
-	tftp_retrieve_file(sfd, satellite_addr, NULL, 1);
+	tftp_retrieve_file(sfd, satellite_addr, NULL, 1, "[GROUND STATION]");
 
 	close(sfd);
 	unlink(GROUND_STATION_SOCKET_PATH);
