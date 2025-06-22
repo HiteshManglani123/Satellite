@@ -67,8 +67,6 @@ void serialize_data_pkt(uint8_t *buf, struct tftp_data *data_pkt, size_t data_le
         Save Data buf
         a lenth under 512 means that this is the last data packet to be sent.
     */
-    // size_t actual_data_length = strlen()
-    // size_t data_len = strnlen(data_pkt->data, MAX_DATA_LEN);
     memcpy(buf + offset, data_pkt->data, data_len);
     offset += data_len;
 }
@@ -191,9 +189,6 @@ int tftp_retrieve_file(int sfd, struct sockaddr_un dest_addr, uint8_t *buf, size
 
         printf("%s just received: %lu\n", log_prefix, recv_len);
         uint8_t *recv_buf_p = recv_buf + sizeof(data_pkt.opcode) + sizeof(data_pkt.block);
-        // for (size_t i = 0; i < data_len; i += 4) {
-        //     printf("i: %lu - %.2x%.2x %.2x%.2x\n", i, recv_buf_p[i], recv_buf_p[i + 1], recv_buf_p[i + 2], recv_buf_p[i + 3]);
-        // }
 
 
         deserialize_data_pkt(recv_buf, &data_pkt, data_len);
